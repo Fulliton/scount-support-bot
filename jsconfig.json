@@ -5,7 +5,8 @@
       "@bootstrap/*": ["bootstrap/*"],
       "@actions/*": ["app/actions/*"],
       "@helpers": ["helpers/*"],
-      "@config": ["config/*"]
+      "@config": ["config/*"],
+      "@services": ["services/*"]
     }
   }
 }

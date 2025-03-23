@@ -28,6 +28,7 @@ if (command === 'config') {
 } else if (command === 'start') {
     Log.debug('Init Core and create Polling Bot');
     Core.init()
+        .initSaluteSpeech()
         .createBot()
         .registerRoute()
 } else {

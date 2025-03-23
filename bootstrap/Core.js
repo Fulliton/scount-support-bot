@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const dotenv = require('dotenv')
+const SaluteSpeechService = require("../services/SaluteSpeechService");
 
 dotenv.config();
 
@@ -8,6 +9,7 @@ class Core {
 
     config = [];
     _bot = null;
+    saluteSpeech = null;
 
     constructor() {
         const configDir = path.join(__dirname, '/../config')
@@ -33,6 +35,11 @@ class Core {
             { polling: true }
         );
 
+        return this
+    }
+
+    initSaluteSpeech() {
+        this.saluteSpeech = new SaluteSpeechService;
         return this
     }
 
