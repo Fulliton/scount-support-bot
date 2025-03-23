@@ -1,0 +1,12 @@
+{
+  "name": "scount-support-bot",
+  "version": "1.0.0",
+  "description": "Telegram bot for help child",
+  "main": "index.js",
+  "repository": "https://github.com/Fulliton/scount-support-bot.git",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
