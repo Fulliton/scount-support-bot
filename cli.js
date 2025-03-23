@@ -19,6 +19,8 @@ if (command === 'config') {
     }
 
     // тут можешь подключить и использовать свой config loader
+} else if (command === 'start') {
+    require('./start')
 } else {
     Log.error(`Unknown command: ${command}`);
 }
