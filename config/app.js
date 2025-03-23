@@ -1,6 +1,7 @@
+const env = require('../helpers/env');
 
 const config = {
-    debug: process.env.APP_DEBUG === 'true',
+    debug: env("APP_DEBUG", false),
 }
 
 module.exports = config
