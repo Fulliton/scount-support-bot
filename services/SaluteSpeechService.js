@@ -121,14 +121,20 @@ class SaluteSpeechService {
     }
 
     async synthesis(text) {
-        const res = await this.api.post('/text:synthesize?format=opus&voice=Nec_24000', text, {
-            responseType: 'arraybuffer',
-            headers: {
-                'Content-Type': 'application/ssml',
-            }
-        });
+        try {
+            const res = await this.api.post('/text:synthesize?format=opus&voice=Nec_24000', text, {
+                responseType: 'arraybuffer',
+                headers: {
+                    'Content-Type': 'application/ssml',
+                }
+            });
 
-        return Buffer.from(res.data, 'binary');
+            return Buffer.from(res.data, 'binary');
+        } catch (e) {
+            Log.error('- SBERBANK - ❌ Ошибка генерации аудио');
+            return null;
+        }
+
     }
 }
 

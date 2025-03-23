@@ -25,7 +25,7 @@ class AbstractAction {
      *
      * @param {string} text
      * @param {boolean} reply
-     * @private
+     * @protected
      */
     _send(text, reply = false) {
         this.bot.sendMessage(

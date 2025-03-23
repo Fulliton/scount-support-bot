@@ -9,6 +9,10 @@ class Core {
 
     config = [];
     _bot = null;
+    /**
+     *
+     * @type {SaluteSpeechService|null}
+     */
     saluteSpeech = null;
 
     constructor() {
