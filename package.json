@@ -2,11 +2,20 @@
   "name": "scount-support-bot",
   "version": "1.0.0",
   "description": "Telegram bot for help child",
-  "main": "index.js",
+  "main": "bootstrap/Core.js",
   "repository": "https://github.com/Fulliton/scount-support-bot.git",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node start.js"
+  },
+  "bin": {
+    "cli": "./cli.js"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.8.4",
+    "dotenv": "^16.4.7",
+    "node-telegram-bot-api": "^0.66.0",
+    "uuid": "^11.1.0"
+  }
 }
