@@ -1,3 +1,5 @@
+const Log = require("@bootstrap/Log")
+
 class AbstractAction {
 
     bot;
@@ -10,17 +12,28 @@ class AbstractAction {
     constructor(bot, message) {
         this.bot = bot;
         this.message = message;
+
+        Log.debug('Receive new message', message);
     }
 
     handle() {
         throw new Error('Not implemented');
     }
 
-    _send(text) {
+    /**
+     * Отправить сообщение в ответ
+     *
+     * @param {string} text
+     * @param {boolean} reply
+     * @private
+     */
+    _send(text, reply = false) {
         this.bot.sendMessage(
             this.message.chat.id,
-            text
+            text,
+            reply ? { reply_to_message_id: this.message.message_id} : {}
         )
+            .catch(err => Log.error(err));
     }
 }
 
