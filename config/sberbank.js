@@ -1,4 +1,4 @@
-const env = require('../helpers/env');
+const env = require('@helpers/env');
 
 const config = {
     host: env("SB_HOST"),
@@ -7,4 +7,4 @@ const config = {
     scopes: env("SB_SCOPES"),
 }
 
-module.exports = config
+module.exports = config;

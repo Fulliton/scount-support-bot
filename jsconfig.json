@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@bootstrap/*": ["bootstrap/*"],
+      "@actions/*": ["app/actions/*"],
+      "@helpers": ["helpers/*"],
+      "@config": ["config/*"]
+    }
+  }
+}

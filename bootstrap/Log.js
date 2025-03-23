@@ -1,4 +1,4 @@
-const config = require('./config.js');
+const config = require('@bootstrap/config')
 
 class Log {
     static info(log, data = null) {

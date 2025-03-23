@@ -5,16 +5,24 @@
   "main": "bootstrap/Core.js",
   "repository": "https://github.com/Fulliton/scount-support-bot.git",
   "scripts": {
-    "start": "node start.js"
+    "start": "cli start"
   },
   "bin": {
     "cli": "./cli.js"
+  },
+  "_moduleAliases": {
+    "@root": "./",
+    "@bootstrap": "bootstrap",
+    "@actions": "app/actions",
+    "@helpers": "helpers",
+    "@config": "config"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.8.4",
     "dotenv": "^16.4.7",
+    "module-alias": "^2.2.3",
     "node-telegram-bot-api": "^0.66.0",
     "uuid": "^11.1.0"
   }

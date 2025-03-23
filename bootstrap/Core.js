@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const dotenv = require('dotenv');
+const fs = require('fs')
+const path = require('path')
+const dotenv = require('dotenv')
 
 dotenv.config();
 
@@ -14,11 +14,15 @@ class Core {
         fs.readdirSync(configDir).forEach((file) => {
             if (file.endsWith('.js')) {
                 const name = path.basename(file, '.js'); // имя файла без .js
-                const filePath = path.join(configDir, file);
-                this.config[name] = require(filePath); // загружаем экспорт
+                this.config[name] = require(`@config/${file}`); // загружаем экспорт
             }
         });
         global.configData = this.config;
+        global.core = this;
+    }
+
+    static init() {
+        return new Core();
     }
 
     createBot() {
@@ -48,11 +52,4 @@ class Core {
     }
 }
 
-if (!(global.core instanceof Core)) {
-    global.core = new Core;
-}
-/**
- *
- * @type {Core}
- */
-module.exports = global.core;
+module.exports = Core

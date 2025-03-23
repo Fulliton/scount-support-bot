@@ -1,5 +1,4 @@
-const route = require('../../bootstrap/route');
+const route = require('@bootstrap/route')
+const StartAction = require('@actions/StartAction')
 
-const TestAction = require('../actions/TestAction');
-
-route(/\/photo/, TestAction);
+route(/\/start/, StartAction);

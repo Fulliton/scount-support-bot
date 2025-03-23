@@ -4,7 +4,7 @@
  * @param {string|boolean|Number|null} defaultValue
  * @returns {string|boolean|Number|null}
  */
-module.exports = function env(name, defaultValue = null) {
+function env(name, defaultValue = null) {
     const value = process.env[name] ?? defaultValue
 
     if (value === 'true') {
@@ -15,3 +15,5 @@ module.exports = function env(name, defaultValue = null) {
 
     return value;
 }
+
+module.exports = env;
