@@ -1,5 +1,6 @@
 const AbstractAction = require('@bootstrap/AbstractAction');
 const { Command } = require('@decorators/Command');
+const Log = require('@helpers/Log');
 
 @Command(/\/start/)
 @Command(/\/help/)
@@ -17,7 +18,8 @@ class StartAction extends AbstractAction {
             "🧠 Ответы на сложные вопросы\n" +
             "Есть идея, проблема или просто любопытство? Задай вопрос — постараюсь удивить ответом.",
             true
-        );
+        )
+            .catch(error => Log.error('Ошибка приветствия', error));
     }
 }
 

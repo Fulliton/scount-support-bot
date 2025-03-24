@@ -12,22 +12,31 @@ class CreateSynthesisAction extends AbstractAction {
     }
 
     async handle() {
-        const audio = await global.core.saluteSpeech.synthesis(this.message.text);
-
-        if (audio) {
-            const stream = Readable.from(audio);
-            stream.path = 'new_voice_message.ogg';
-            await this.bot.sendAudio(
-                this.message.chat.id,
-                stream,
-                { reply_to_message_id: this.message.message_id},
-                {
-                    filename: stream.path,
-                    contentType: 'application/ogg',
+        const message = await this._send('⏱️ Начинаю обрабатывать, осталось подождать совсем немного...')
+        try {
+            const audio = await global.core.saluteSpeech.synthesis(this.message.text);
+            await this._delete(message);
+            try {
+                if (audio) {
+                    const stream = Readable.from(audio);
+                    stream.path = 'new_voice_message.ogg';
+                    await this.bot.sendAudio(
+                        this.message.chat.id,
+                        stream,
+                        {reply_to_message_id: this.message.message_id},
+                        {
+                            filename: stream.path,
+                            contentType: 'application/ogg',
+                        }
+                    );
+                } else {
+                    await this._send('❌ Ошибка генерации аудио. Возможно ты ничего не отправил', true);
                 }
-            );
-        } else {
-            await this._send('❌ Ошибка генерации аудио. Возможно ты ничего не отправил', true);
+            } catch (error) {
+                await this._send('❌ Произошла ошибка. Возможно текст был слишком длинный', true);
+            }
+        } catch (err) {
+            await this._send('❌ Я не смогла получить от тебя сообщение. Попробуй ещё раз', true);
         }
     }
 }
