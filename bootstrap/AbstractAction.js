@@ -1,4 +1,4 @@
-const Log = require("@bootstrap/Log")
+const Log = require("../helpers/Log")
 
 class AbstractAction {
 
@@ -16,6 +16,14 @@ class AbstractAction {
         Log.debug('Receive new message', message);
     }
 
+    /**
+     *
+     * @returns {typeof AbstractMiddleware|null}
+     */
+    static getMiddleware() {
+        return null
+    }
+
     handle() {
         throw new Error('Not implemented');
     }
@@ -27,13 +35,18 @@ class AbstractAction {
      * @param {boolean} reply
      * @protected
      */
-    _send(text, reply = false) {
-        this.bot.sendMessage(
+    async _send(text, reply = false) {
+        return await this.bot.sendMessage(
             this.message.chat.id,
             text,
             reply ? { reply_to_message_id: this.message.message_id} : {}
         )
-            .catch(err => Log.error(err));
+    }
+
+    async _delete(message) {
+        if (message) {
+            await this.bot.deleteMessage(this.message.chat.id, message.message_id);
+        }
     }
 }
 

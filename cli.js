@@ -2,11 +2,18 @@
 /**
  * Загружаем ядро проекта
  */
+// ✅ Включаем поддержку Babel-декораторов
+require('@babel/register')({
+    extensions: ['.js'],
+    ignore: [/node_modules/]
+});
+
 require('module-alias/register');
 
 
+
 const Core = require('@bootstrap/Core')
-const Log = require("@bootstrap/Log")
+const Log = require("./helpers/Log")
 Core.init()
 
 const config = require('@bootstrap/config')
@@ -30,7 +37,10 @@ if (command === 'config') {
     Core.init()
         .initSaluteSpeech()
         .createBot()
-        .registerRoute()
+        .registerActions()
+        .registerCommand()
+        .registerVoiceAction()
+        .registerMessageAction()
 } else {
     Log.error(`Unknown command: ${command}`);
 }

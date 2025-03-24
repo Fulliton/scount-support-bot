@@ -1,7 +1,7 @@
 const axios = require('axios');
 const {Agent} = require("node:https");
 const { v4: uuidv4 } = require('uuid');
-const Log = require("@bootstrap/Log");
+const Log = require("../helpers/Log");
 const config = require("@bootstrap/config");
 
 class SaluteSpeechService {

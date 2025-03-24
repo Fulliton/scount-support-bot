@@ -1,5 +1,8 @@
-const AbstractAction = require('@actions/AbstractAction');
+const AbstractAction = require('@bootstrap/AbstractAction');
+const { Command } = require('@decorators/Command');
 
+@Command(/\/start/)
+@Command(/\/help/)
 class StartAction extends AbstractAction {
 
     handle() {

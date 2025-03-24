@@ -6,7 +6,10 @@
       "@actions/*": ["app/actions/*"],
       "@helpers": ["helpers/*"],
       "@config": ["config/*"],
-      "@services": ["services/*"]
+      "@services": ["services/*"],
+      "@decorators": ["decorators/*"],
+      "@states": ["states/*"],
+      "@middleware": ["app/middleware/*"]
     }
   }
 }

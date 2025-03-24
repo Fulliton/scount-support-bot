@@ -1,15 +1,16 @@
-const AbstractAction = require('@actions/AbstractAction');
+const AbstractAction = require('@bootstrap/AbstractAction');
+const { Command } = require('@decorators/Command');
+const { setState, SPEAK_STATES } = require('@states/userStates');
 
+@Command(/\/speak/)
 class SpeakAction extends AbstractAction {
 
     async handle() {
-        const audio = await global.core.saluteSpeech.synthesis(this.message.text.replace('/speak', ''));
 
-        if (audio) {
-            await this.bot.sendAudio(this.message.chat.id, audio, { reply_to_message_id: this.message.message_id});
-        } else {
-            await this._send('❌ Ошибка генерации аудио. Возможно ты ничего не отправил', true);
-        }
+        const chatId = this.message.chat.id;
+        setState(chatId, SPEAK_STATES.WAITING_TEXT);
+
+        await this._send('Введите текст для озвучивания:', true);
     }
 }
 
