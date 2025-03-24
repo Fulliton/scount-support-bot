@@ -19,7 +19,8 @@
     "@services": "services",
     "@decorators": "decorators",
     "@states": "states",
-    "@middleware": "app/middleware"
+    "@middleware": "app/middleware",
+    "@models": "app/models"
   },
   "author": "",
   "license": "ISC",
@@ -28,6 +29,8 @@
     "dotenv": "^16.4.7",
     "module-alias": "^2.2.3",
     "node-telegram-bot-api": "^0.66.0",
+    "sequelize": "^6.37.6",
+    "sqlite3": "^5.1.7",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

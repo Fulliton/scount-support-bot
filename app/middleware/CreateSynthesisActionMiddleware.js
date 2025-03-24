@@ -7,15 +7,15 @@ const {
 
 class CreateSynthesisActionMiddleware extends AbstractMiddleware
 {
-    handle() {
+    async handle() {
         const currentState = getState(this.message.chat.id)
 
         if (currentState === SPEAK_STATES.WAITING_TEXT && this.message.text) {
             clearState(this.message.chat.id);
-            return true;
+            return Promise.resolve(true);
         }
 
-        return false;
+        return Promise.resolve(false);
     }
 }
 

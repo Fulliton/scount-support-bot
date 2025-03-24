@@ -33,11 +33,12 @@ class AbstractAction {
      *
      * @param {string} text
      * @param {boolean} reply
+     * @param {Number|null} chat_id
      * @protected
      */
-    async _send(text, reply = false) {
+    async _send(text, reply = false, chat_id = null) {
         return await this.bot.sendMessage(
-            this.message.chat.id,
+            chat_id ?? this.message.chat.id,
             text,
             reply ? { reply_to_message_id: this.message.message_id} : {}
         )

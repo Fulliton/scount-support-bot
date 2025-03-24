@@ -9,7 +9,8 @@
       "@services": ["services/*"],
       "@decorators": ["decorators/*"],
       "@states": ["states/*"],
-      "@middleware": ["app/middleware/*"]
+      "@middleware": ["app/middleware/*"],
+      "@models": ["app/models/*"]
     }
   }
 }

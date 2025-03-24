@@ -3,7 +3,7 @@ const { Command } = require('@decorators/Command');
 const { setState, SPEAK_STATES } = require('@states/userStates');
 
 @Command(/\/speak/)
-class SpeakAction extends AbstractAction {
+class SpeakCommand extends AbstractAction {
 
     async handle() {
 
@@ -14,4 +14,4 @@ class SpeakAction extends AbstractAction {
     }
 }
 
-module.exports = SpeakAction;
+module.exports = SpeakCommand;

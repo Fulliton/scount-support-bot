@@ -8,10 +8,9 @@ class AbstractMiddleware {
 
     /**
      * Реализация методы проверка допуска к Action
-     *
-     * @return {boolean}
+     * @return {Promise<boolean>}
      */
-    handle() {
+    async handle() {
         throw new Error('Not implemented');
     }
 }

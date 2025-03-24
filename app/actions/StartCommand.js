@@ -4,7 +4,7 @@ const Log = require('@helpers/Log');
 
 @Command(/\/start/)
 @Command(/\/help/)
-class StartAction extends AbstractAction {
+class StartCommand extends AbstractAction {
 
     handle() {
         this._send(
@@ -23,4 +23,4 @@ class StartAction extends AbstractAction {
     }
 }
 
-module.exports = StartAction;
+module.exports = StartCommand;

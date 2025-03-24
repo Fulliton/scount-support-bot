@@ -14,7 +14,8 @@ require('module-alias/register');
 
 const Core = require('@bootstrap/Core')
 const Log = require("./helpers/Log")
-Core.init()
+
+const core = Core.init()
 
 const config = require('@bootstrap/config')
 
@@ -34,8 +35,7 @@ if (command === 'config') {
     // тут можешь подключить и использовать свой config loader
 } else if (command === 'start') {
     Log.debug('Init Core and create Polling Bot');
-    Core.init()
-        .initSaluteSpeech()
+    core.initSaluteSpeech()
         .createBot()
         .registerActions()
         .registerCommand()

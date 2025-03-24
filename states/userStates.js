@@ -5,6 +5,9 @@ const userStates = new Map();
 const SPEAK_STATES = {
     WAITING_TEXT: 'WAITING_TEXT',
 };
+const ADMIN_STATES = {
+    SEND_ALL: 'SEND_ALL',
+}
 
 function setState(userId, state) {
 
@@ -28,4 +31,5 @@ module.exports = {
     getState,
     clearState,
     SPEAK_STATES,
+    ADMIN_STATES
 };
