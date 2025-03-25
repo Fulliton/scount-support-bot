@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const SaluteSpeechService = require("@services/SaluteSpeechService");
 const { sequelize, connect } = require('@bootstrap/database');
 const Chat = require("@models/Chat");
+import GigaChatService from '@services/GigaChatService';
 
 dotenv.config();
 
@@ -22,6 +23,12 @@ class Core {
      * @type {SaluteSpeechService|null}
      */
     saluteSpeech = null;
+
+    /**
+     *
+     * @type {GigaChatService|null}
+     */
+    gigachatService = null;
 
     database = sequelize;
 
@@ -56,6 +63,12 @@ class Core {
     initSaluteSpeech() {
         this.saluteSpeech = new SaluteSpeechService;
         return this
+    }
+
+    initGigaChat() {
+        this.gigachatService = new GigaChatService();
+        global.gigachatService = this.gigachatService
+        return this;
     }
 
     getBot() {

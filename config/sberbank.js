@@ -5,6 +5,7 @@ const config = {
     client_id: env("SB_CLIENT_ID"),
     client_secret: env("SB_CLIENT_SECRET"),
     scopes: env("SB_SCOPES"),
+    giga: env("SB_GIGA"),
 }
 
 module.exports = config;

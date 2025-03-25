@@ -5,12 +5,12 @@ const {
     COMMAND_STATES
 } = require('@states/userStates');
 
-class CreateSynthesisActionMiddleware extends AbstractMiddleware
+class TobaccoMiddleware extends AbstractMiddleware
 {
     async handle() {
         const currentState = getState(this.message.chat.id)
 
-        if (currentState === COMMAND_STATES.SPEAK && this.message.text) {
+        if (currentState === COMMAND_STATES.TOBACCO && this.message.text) {
             clearState(this.message.chat.id);
             return Promise.resolve(true);
         }
@@ -19,4 +19,4 @@ class CreateSynthesisActionMiddleware extends AbstractMiddleware
     }
 }
 
-module.exports = CreateSynthesisActionMiddleware;
+module.exports = TobaccoMiddleware;

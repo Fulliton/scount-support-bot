@@ -36,6 +36,7 @@ if (command === 'config') {
 } else if (command === 'start') {
     Log.debug('Init Core and create Polling Bot');
     core.initSaluteSpeech()
+        .initGigaChat()
         .createBot()
         .registerActions()
         .registerCommand()

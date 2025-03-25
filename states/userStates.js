@@ -2,11 +2,12 @@ const Log = require('@helpers/Log');
 
 const userStates = new Map();
 
-const SPEAK_STATES = {
-    WAITING_TEXT: 'WAITING_TEXT',
-};
 const ADMIN_STATES = {
     SEND_ALL: 'SEND_ALL',
+}
+const COMMAND_STATES = {
+    TOBACCO: 'TOBACCO',
+    SPEAK: 'SPEAK',
 }
 
 function setState(userId, state) {
@@ -30,6 +31,6 @@ module.exports = {
     setState,
     getState,
     clearState,
-    SPEAK_STATES,
+    COMMAND_STATES,
     ADMIN_STATES
 };
