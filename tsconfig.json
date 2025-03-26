@@ -1,15 +1,28 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
-    "module": "ESNext",
+    "baseUrl": ".", // корень проекта
+    "rootDir": ".",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@providers/*": ["bootstrap/providers/*"],
+      "@bootstrap/*": ["bootstrap/*"],
+      "@decorators/*": ["decorators/*"],
+      "@utils/*": ["utils/*"],
+      "@actions/*": ["app/actions/*"],
+      "@middlewares/*": ["app/middlewares/*"],
+      "@interfaces/*": ["interfaces/*"]
+    },
+    "module": "commonjs",
+    "target": "es2022",
     "moduleResolution": "node",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
     "sourceMap": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
   },
-  "include": ["src/**/*.ts"],
+  "include": ["/**/*.ts"],
   "exclude": ["node_modules"]
 }

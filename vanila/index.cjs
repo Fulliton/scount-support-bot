@@ -7,6 +7,6 @@ require('@babel/register')({
 
 // динамический импорт cli.js (ESM)
 (async () => {
-    const module = await import('./cli.js');
+    const module = await import('./cli.ts');
     module.default(); // или module.runCLI()
 })();

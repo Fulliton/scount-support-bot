@@ -1,4 +1,4 @@
-import AdminMiddleware from "AdminMiddleware.js"
+import AdminMiddleware from "vanila/app/middleware/AdminMiddleware.js"
 import userState from '../../states/UserState.js'
 import {ADMIN_STATES} from "../../states/SystemStates.js";
 

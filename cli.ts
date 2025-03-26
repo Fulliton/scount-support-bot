@@ -1,33 +1,10 @@
-#!/usr/bin/env node
-/**
- * Загружаем ядро проекта
- */
+import * as dotenv from 'dotenv';
+dotenv.config();
 
-import { core } from "./bootstrap/Core.js";
-import config from "./helpers/config.js";
+import core from '@bootstrap/Core'
+import config from "@utils/config"
 
-const args = process.argv.slice(2); // ['config']
-const command = args[0];
+core.initTelegramBot()
+    .initServiceProvider()
 
-await core.initConfig()
-
-if (command === 'config') {
-
-    const tagArg = args.find(arg => arg.startsWith('--tag='));
-    const tag = tagArg ? tagArg.split('=')[1] : null;
-    if (tag) {
-        console.info('Config Project in tags:', config(tag));
-    } else {
-        console.info('Config Project:', core.config);
-    }
-
-} else if (command === 'start') {
-
-    console.debug('Init Core and create Polling Bot');
-    core.initDatabase()
-        .initBot()
-    await core.registerProvider()
-
-} else {
-    console.error(`Unknown command: ${command}`);
-}
+console.log(config('telegram.token'))

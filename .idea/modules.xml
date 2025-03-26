@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/scount-support-bot.iml" filepath="$PROJECT_DIR$/.idea/scount-support-bot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vanila/.idea/scount-support-bot.iml" filepath="$PROJECT_DIR$/vanila/.idea/scount-support-bot.iml" />
     </modules>
   </component>
 </project>
