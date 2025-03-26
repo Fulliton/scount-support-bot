@@ -1,4 +1,5 @@
 vanila/.idea
 node_modules
 .env
-vanila/database.sqlite
+vanila
+dist

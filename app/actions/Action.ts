@@ -18,10 +18,15 @@ export default abstract class Action implements ActionInterface {
         return message.chat.id;
     }
 
-    /**
-     * @protected
-     */
-    async _send(text: string, chat_id: number, reply: number|null = null): Promise<TelegramBot.Message> {
+    protected async _delete(chat_id: number, message: TelegramBot.Message|null): Promise<void> {
+        if (message) {
+            await this._bot.deleteMessage(chat_id, message.message_id);
+        }
+    }
+
+    // this._delete(message)
+
+    protected async _send(text: string, chat_id: number, reply: number|null = null): Promise<TelegramBot.Message> {
         return await this._bot.sendMessage(
             chat_id,
             text,

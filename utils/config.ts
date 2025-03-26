@@ -1,4 +1,4 @@
-import core from '@bootstrap/Core';
+import * as configs from '../configs'
 
 export default function config(
     path: string,
@@ -14,5 +14,5 @@ export default function config(
         return config[key] ?? value;
     }
 
-    return get(path.split('.'), core.config) ?? value;
+    return get(path.split('.'), configs) ?? value;
 }
