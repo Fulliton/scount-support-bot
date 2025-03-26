@@ -1,7 +1,7 @@
-import AbstractMiddleware from "@bootstrap/AbstractMiddleware";
-import Chat from "@models/Chat";
+import AbstractMiddleware from "../../helpers/AbstractMiddleware.js";
+import Chat from "../models/Chat.js";
 
-class AdminMiddleware extends AbstractMiddleware
+export default class AdminMiddleware extends AbstractMiddleware
 {
      async handle() {
          return Chat.findAll({
@@ -18,5 +18,3 @@ class AdminMiddleware extends AbstractMiddleware
              })
     }
 }
-
-module.exports = AdminMiddleware;

@@ -1,4 +1,4 @@
-class AbstractMiddleware {
+export default class AbstractMiddleware {
 
     message = null;
 
@@ -14,5 +14,3 @@ class AbstractMiddleware {
         throw new Error('Not implemented');
     }
 }
-
-module.exports = AbstractMiddleware;

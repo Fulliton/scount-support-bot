@@ -1,10 +1,12 @@
+import { core } from '../bootstrap/Core.js'
+
 /**
  * Получить данные с конфиг по ключу
  *
  * @param {String} key
  * @example "telegram.token"
  */
-function config(key) {
+export default function config(key) {
     function get(keys, config) {
         const key = keys.shift();
 
@@ -15,7 +17,5 @@ function config(key) {
         return config[key];
     }
 
-    return get(key.split('.'), global.configData);
+    return get(key.split('.'), core.config);
 }
-
-module.exports = config;

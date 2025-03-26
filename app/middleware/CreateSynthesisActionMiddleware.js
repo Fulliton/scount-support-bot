@@ -1,22 +1,17 @@
-import AbstractMiddleware from "@bootstrap/AbstractMiddleware";
-const {
-    getState,
-    clearState,
-    COMMAND_STATES
-} = require('@states/userStates');
+import AbstractMiddleware from "../../helpers/AbstractMiddleware.js"
+import userState from "../../states/UserState.js";
+import { COMMAND_STATES } from "../../states/SystemStates.js";
 
-class CreateSynthesisActionMiddleware extends AbstractMiddleware
+export default class CreateSynthesisActionMiddleware extends AbstractMiddleware
 {
     async handle() {
-        const currentState = getState(this.message.chat.id)
+        const currentState = userState.getState(this.message.chat.id)
 
         if (currentState === COMMAND_STATES.SPEAK && this.message.text) {
-            clearState(this.message.chat.id);
-            return Promise.resolve(true);
+            userState.clearState(this.message.chat.id)
+            return Promise.resolve(true)
         }
 
-        return Promise.resolve(false);
+        return Promise.resolve(false)
     }
 }
-
-module.exports = CreateSynthesisActionMiddleware;

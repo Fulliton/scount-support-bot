@@ -1,9 +1,9 @@
-const AbstractAction = require('@bootstrap/AbstractAction');
-const { Command } = require('@decorators/Command');
-const { setState, COMMAND_STATES } = require('@states/userStates');
+import AbstractAction from "../../helpers/AbstractAction"
+import { Command } from '../../decorators/Command'
+import { setState, COMMAND_STATES } from '../../states/userStates';
 
 @Command(/\/tobacco/)
-class TobaccoCommand extends AbstractAction {
+export default class TobaccoCommand extends AbstractAction {
 
     async handle() {
 
@@ -13,5 +13,3 @@ class TobaccoCommand extends AbstractAction {
         await this._send('Я смогу подобрать вам табак из ранее оставленных ваших отзывов:', true);
     }
 }
-
-module.exports = TobaccoCommand;

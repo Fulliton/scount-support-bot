@@ -15,8 +15,9 @@
 
 По умолчанию в папке лежит конфигурация всего проекта `app.js`.
 Для получения включенного режима `DEBUG` необходимо выполнить следующую команду
+
 ```js
-const config = require('./bootstrap/config')
+const config = require('./config')
 
 config('app.debug')
 ```

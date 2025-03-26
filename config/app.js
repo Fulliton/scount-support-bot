@@ -1,7 +1,5 @@
-const env = require('@helpers/env');
+import env from '../helpers/env.js'
 
-const config = {
+export default {
     debug: env("APP_DEBUG", false),
 }
-
-module.exports = config

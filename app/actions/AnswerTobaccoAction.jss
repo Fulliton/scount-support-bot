@@ -1,9 +1,9 @@
-const AbstractAction = require('@bootstrap/AbstractAction');
-const { Message } = require('@decorators/Message');
-const TobaccoMiddleware = require('@middleware/TobaccoMiddleware');
+import AbstractAction from "../../helpers/AbstractAction"
+import {Message} from '../../decorators/Message'
+import TobaccoMiddleware from '../middleware/TobaccoMiddleware'
 
 @Message()
-class AnswerTobaccoAction extends AbstractAction {
+export default class AnswerTobaccoAction extends AbstractAction {
 
     static getMiddleware() {
         return TobaccoMiddleware;
@@ -19,5 +19,3 @@ class AnswerTobaccoAction extends AbstractAction {
         }
     }
 }
-
-module.exports = AnswerTobaccoAction;

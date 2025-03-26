@@ -1,31 +1,25 @@
-import AdminMiddleware from "@middleware/AdminMiddleware";
+import AdminMiddleware from "AdminMiddleware.js"
+import userState from '../../states/UserState.js'
+import {ADMIN_STATES} from "../../states/SystemStates.js";
 
-const {
-    getState,
-    clearState,
-    ADMIN_STATES,
-} = require('@states/userStates');
-
-class CreateNotifyAllUserMiddleware extends AdminMiddleware
+export default class CreateNotifyAllUserMiddleware extends AdminMiddleware
 {
     async handle() {
         return super.handle()
             .then(result => {
-                console.log(result);
+                console.log(result)
                 if (result) {
-                    const currentState = getState(this.message.chat.id)
+                    const currentState = userState.getState(this.message.chat.id)
 
                     if (currentState === ADMIN_STATES.SEND_ALL && this.message.text) {
-                        clearState(this.message.chat.id);
-                        return true;
+                        userState.clearState(this.message.chat.id)
+                        return true
                     }
                 }
-                return false;
+                return false
             })
             .catch(() => {
                 return false
             })
     }
 }
-
-module.exports = CreateNotifyAllUserMiddleware;

@@ -1,173 +1,115 @@
-const fs = require('fs')
-const path = require('path')
-const dotenv = require('dotenv')
-const SaluteSpeechService = require("@services/SaluteSpeechService");
-const { sequelize, connect } = require('@bootstrap/database');
-const Chat = require("@models/Chat");
-import GigaChatService from '@services/GigaChatService';
+import fs from 'fs';
+import path from 'path';
+import dotenv from 'dotenv';
+import TelegramBot from "node-telegram-bot-api"
+
+import { database } from '../database/database.js';
 
 dotenv.config();
 
-class Core {
+export class Core {
 
-    config = [];
     /**
+     * Конфигурация проекта
      *
-     * @type {TelegramBot|null}
+     * @type {[]}
+     * @private
+     */
+    _config = [];
+    /**
      * @private
      */
     _bot = null;
 
     /**
+     * СУБД ОРМ
      *
-     * @type {SaluteSpeechService|null}
+     * @type {Database}
+     * @private
      */
-    saluteSpeech = null;
+    _database = database;
 
     /**
+     * Подключение конфигурации проекта
      *
-     * @type {GigaChatService|null}
+     * @returns {Core}
      */
-    gigachatService = null;
-
-    database = sequelize;
-
-    constructor() {
-        const configDir = path.join(__dirname, '/../config')
-        fs.readdirSync(configDir).forEach((file) => {
+    async initConfig() {
+        const configDir = path.join(process.cwd(), '/config')
+        for (const file of fs.readdirSync(configDir)) {
             if (file.endsWith('.js')) {
-                const name = path.basename(file, '.js'); // имя файла без .js
-                this.config[name] = require(`@config/${file}`); // загружаем экспорт
+                const name = path.basename(file, '.js');
+                const modulePath = path.join(configDir, file);
+
+                const importedModule = await import(modulePath);
+                this._config[name] = importedModule.default || importedModule;
             }
-        });
-        connect()
-        global.configData = this.config;
-        global.core = this;
-    }
-
-    static init() {
-        return new Core();
-    }
-
-    createBot() {
-        const TelegramBot = require("node-telegram-bot-api");
-
-        this._bot = new TelegramBot(
-            this.config['telegram']['token'],
-            { polling: true }
-        );
+        }
 
         return this
     }
 
-    initSaluteSpeech() {
-        this.saluteSpeech = new SaluteSpeechService;
-        return this
-    }
+    /**
+     * Инициализация СУБД
+     *
+     * @returns {Core}
+     */
+    initDatabase() {
+        this._database.connect()
+            .then(() => console.debug('Core Connected to Database'))
+            .catch(() => console.error('Core NOT Connected to Database'));
 
-    initGigaChat() {
-        this.gigachatService = new GigaChatService();
-        global.gigachatService = this.gigachatService
         return this;
     }
 
-    getBot() {
+    /**
+     * Создание бота
+     *
+     * @returns {Core}
+     */
+    initBot() {
+        this._bot = new TelegramBot(
+            this._config['telegram']['token'],
+            { polling: true }
+        )
+
+        return this
+    }
+
+    /**
+     * Получить копию бота для управления
+     *
+     * @returns {TelegramBot}
+     */
+    get bot() {
         return this._bot
     }
 
-    registerActions() {
-        const routesDir = path.join(__dirname, '/../app/actions')
-        fs.readdirSync(routesDir).forEach((file) => {
+    /**
+     * Получить конфигурация проекта
+     *
+     * @returns {[]}
+     */
+    get config() {
+        return this._config;
+    }
+
+    /**
+     * Регистрация всех сервисных провайдеров для работы ядра
+     *
+     * @returns {Core}
+     */
+    async registerProvider() {
+        const providerDir = path.join(process.cwd(), '/bootstrap/providers')
+        const files = fs.readdirSync(providerDir);
+        for (const file of files) {
             if (file.endsWith('.js')) {
-                const filePath = path.join(routesDir, file);
-                require(filePath); // загружаем экспорт
+                const provider = new (await import(`./providers/${file}`)).default();
+                await provider.boot(this)
             }
-        });
-
-        return this;
-    }
-
-    registerCommand() {
-        const { commands } = require('@decorators/Command');
-        commands.forEach(({ command, action }) => {
-            this._bot.onText(command, (msg) => {
-                const middleware = action.getMiddleware()
-                // Если есть Middleware
-                if (middleware) {
-                    (new middleware(msg)).handle()
-                        .then(result => {
-                            if (result) {
-                                (new action(this._bot, msg)).handle();
-                            }
-                        })
-                } else {
-                    (new action(this._bot, msg)).handle();
-                }
-            })
-        });
-
-        return this;
-    }
-
-    registerVoiceAction() {
-        const { actions } = require('@decorators/Voice');
-        actions.forEach((action) => {
-            this._bot.on('voice', (msg) => {
-                // if (msg.audio || msg.voice) {
-                    (new action(this._bot, msg)).handle();
-                // }
-            })
-        });
-
-        return this;
-    }
-
-    registerMessageAction() {
-        const { actions } = require('@decorators/Message');
-        const { commands } = require('@decorators/Command');
-
-        this._bot.on('message', (msg) => {
-
-            Chat.findOrCreate({where: {chat_id: msg.chat.id}})
-                .then(([_, created]) => {
-                    if (created) {
-                        console.log('Чат был создан');
-                    } else {
-                        console.log('Чат уже существует');
-                    }
-                })
-                .catch((error) => {
-                    console.error('Произошла ошибка:', error);
-                });
-
-            const matchFound = commands.some(({command}) => command.test(msg.text));
-
-            if (matchFound) {
-                return false;  // Если найдено совпадение, возвращаем false
-            }
-
-            console.log('testetet')
-
-            actions.forEach((action) => {
-                const middleware = action.getMiddleware()
-                // Если есть Middleware
-                if (middleware) {
-                    // Если Middleware дал положительный результат
-                    (new middleware(msg)).handle()
-                        .then(result => {
-                            if (result) {
-                                (new action(this._bot, msg)).handle();
-                            }
-                        })
-                } else {
-                    // Если нет Middleware
-                    (new action(this._bot, msg)).handle();
-                }
-            })
-        });
-
+        }
         return this;
     }
 }
 
-module.exports = Core
+export const core = new Core();

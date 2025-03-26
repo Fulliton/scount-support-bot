@@ -1,6 +1,4 @@
-const Log = require("../helpers/Log")
-
-class AbstractAction {
+export default class AbstractAction {
 
     bot;
     message;
@@ -13,7 +11,7 @@ class AbstractAction {
         this.bot = bot;
         this.message = message;
 
-        Log.debug('Receive new message', message);
+        console.debug('Receive new message', message);
     }
 
     /**

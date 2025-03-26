@@ -1,9 +1,10 @@
-const AbstractAction = require('@bootstrap/AbstractAction');
-const { Voice } = require('@decorators/Voice');
-const {get} = require("axios");
+import AbstractAction from "../../helpers/AbstractAction.js"
+import { Voice } from '../../decorators/Voice.js'
+import { get } from "axios"
+import saluteSpeechService from "../../services/SaluteSpeechService.js";
 
 @Voice()
-class VoiceAction extends AbstractAction {
+export default class VoiceAction extends AbstractAction {
 
     lastMessage = null;
 
@@ -11,50 +12,48 @@ class VoiceAction extends AbstractAction {
         this.lastMessage = await this._send(
             "👋Скачиваем ваше Аудио 😔",
             true
-        );
+        )
 
-        const fileInfo = await this.bot.getFile(this.message.voice.file_id);
-        const filePath = fileInfo.file_path;
+        const fileInfo = await this.bot.getFile(this.message.voice.file_id)
+        const filePath = fileInfo.file_path
 
-        const url = `https://api.telegram.org/file/bot${this.bot.token}/${filePath}`;
+        const url = `https://api.telegram.org/file/bot${this.bot.token}/${filePath}`
         const response = await get(url, {
             responseType: 'arraybuffer',
         });
         const buffer = Buffer.from(response.data);
-        this._delete(this.lastMessage);
+        await this._delete(this.lastMessage)
         this.lastMessage = null;
 
-        const requestFileId = await global.core.saluteSpeech.uploadAudio(buffer);
-        const taskId = await global.core.saluteSpeech.recognize(requestFileId);
-        let responseFileId = null;
+        const requestFileId = await saluteSpeechService.uploadAudio(buffer)
+        const taskId = await saluteSpeechService.recognize(requestFileId)
+        let responseFileId;
 
-        const poll = async () => {
+        do {
             try {
-                responseFileId = await global.core.saluteSpeech.status(taskId);
-                console.log('status response:', responseFileId);
+                responseFileId = await saluteSpeechService.status(taskId)
 
                 if (responseFileId === undefined) {
-                    console.log('Ожидаем проверку');
+                    console.debug('VoiceAction: ожидаем проверку')
+
                     if (this.lastMessage === null) {
                         this.lastMessage = await this._send('Ожидайте обработка аудио 😔');
                     }
-                    // Повторить через 1 сек
-                    setTimeout(poll, 1000);
-                } else {
-                    await this._delete(this.lastMessage);
 
-                    const result = await global.core.saluteSpeech.getResult(responseFileId);
-                    await this._send(result);
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // пауза 1 сек
+                } else {
+                    if (this.lastMessage)
+                        await this._delete(this.lastMessage);
+
+                    const result = await saluteSpeechService.getResult(responseFileId)
+                    await this._send(result)
                 }
             } catch (err) {
-                console.error('❌ Ошибка в опросе:', err);
-                await this._send('Ошибка при распознавании 😢');
+                console.error('❌ Ошибка в опросе:', err)
+                await this._send('Ошибка при распознавании 😢')
+                break;
             }
-        };
+        } while (responseFileId === undefined);
 
-        // Стартуем
-        await poll();
     }
 }
-
-module.exports = VoiceAction;

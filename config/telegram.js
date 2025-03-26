@@ -1,7 +1,5 @@
-const env = require('@helpers/env');
+import env from '../helpers/env.js'
 
-const config = {
+export default {
     token: env("TG_TOKEN"),
 }
-
-module.exports = config;

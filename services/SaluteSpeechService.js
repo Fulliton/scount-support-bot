@@ -1,15 +1,12 @@
-const axios = require('axios');
-const {Agent} = require("node:https");
-const { v4: uuidv4 } = require('uuid');
-const Log = require("../helpers/Log");
-const config = require("@bootstrap/config");
+import axios from "axios";
+import { Agent } from "node:https";
+import {v4 as uuidv4} from 'uuid'
+import config from "../helpers/config.js";
 
 class SaluteSpeechService {
     token = null;
 
     constructor() {
-        this.token = global.SalutSpeech?.token;
-
         this.api = axios.create({
             baseURL: config('sberbank.host'),
             timeout: 10000,
@@ -26,7 +23,7 @@ class SaluteSpeechService {
             (res) => res,
             async (error) => {
                 if (error.response?.status === 401) {
-                    Log.info(' - SBERBANK - ⛔ Токен истёк. Обновляем...');
+                    console.info('SaluteSpeechService: ⛔ Токен истёк. Обновляем...');
                     await this.getAccessToken();
                     error.config.headers.Authorization = `Bearer ${this.token}`;
                     return this.api.request(error.config);
@@ -37,7 +34,7 @@ class SaluteSpeechService {
 
         if (this.token === null || this.token === undefined) {
             this.getAccessToken()
-                .catch(err => Log.error('Ошибка получения токена Сбербанк', err));
+                .catch(err => console.error('SaluteSpeechService: Ошибка получения токена Сбербанк', err));
         }
     }
 
@@ -60,19 +57,13 @@ class SaluteSpeechService {
             });
 
             this.token = res.data.access_token;
-            global.SalutSpeech = {}
-            global.SalutSpeech.token = this.token;
             this.api.defaults.headers.common.Authorization = `Bearer ${this.token}`;
 
-            Log.debug('- SBERBANK - ✅ Токен получен');
+            console.debug('SaluteSpeechService: ✅ Токен получен');
         } catch (error) {
-            Log.error('- SBERBANK - ❌ Ошибка при получении токена:', error.message);
+            console.error('SaluteSpeechService: ❌ Ошибка при получении токена:', error.message);
             throw error;
         }
-    }
-
-    async init() {
-        await this.getAccessToken();
     }
 
     async uploadAudio(buffer) {
@@ -85,7 +76,7 @@ class SaluteSpeechService {
 
         const requestFileId = res.data.result.request_file_id;
 
-        Log.debug('- SBERBANK - 📤 Аудио отправлено. Request File ID:', requestFileId);
+        console.debug('SaluteSpeechService: 📤 Аудио отправлено. Request File ID:', requestFileId);
         return requestFileId;
     }
 
@@ -101,7 +92,7 @@ class SaluteSpeechService {
 
         const taskId = res.data.result.id;
 
-        Log.debug('- SBERBANK -📤 Распознавание аудио выполняется.  Task ID:', taskId);
+        console.debug('SaluteSpeechService: 📤 Распознавание аудио выполняется.  Task ID:', taskId);
         return taskId;
     }
 
@@ -110,7 +101,7 @@ class SaluteSpeechService {
 
         const responseFileId = res.data.result.response_file_id;
 
-        Log.debug('- SBERBANK -📤 Получили статус файла распознования.  Request File ID:', responseFileId);
+        console.debug('SaluteSpeechService: 📤 Получили статус файла распознования.  Request File ID:', responseFileId);
         return responseFileId;
     }
 
@@ -131,11 +122,12 @@ class SaluteSpeechService {
 
             return Buffer.from(res.data, 'binary');
         } catch (e) {
-            Log.error('- SBERBANK - ❌ Ошибка генерации аудио');
+            console.error('SaluteSpeechService:  ❌ Ошибка генерации аудио');
             return null;
         }
 
     }
 }
 
-module.exports = SaluteSpeechService;
+const saluteSpeechService = new SaluteSpeechService();
+export default saluteSpeechService;

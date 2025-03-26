@@ -1,10 +1,9 @@
-const AbstractAction = require('@bootstrap/AbstractAction');
-const { Command } = require('@decorators/Command');
-const Log = require('@helpers/Log');
+import AbstractAction from "../../helpers/AbstractAction.js"
+import { Command } from '../../decorators/Command.js'
 
 @Command(/\/start/)
 @Command(/\/help/)
-class StartCommand extends AbstractAction {
+export default class StartCommand extends AbstractAction {
 
     handle() {
         this._send(
@@ -19,8 +18,6 @@ class StartCommand extends AbstractAction {
             "Есть идея, проблема или просто любопытство? Задай вопрос — постараюсь удивить ответом.",
             true
         )
-            .catch(error => Log.error('Ошибка приветствия', error));
+            .catch(error => console.error('Ошибка приветствия', error));
     }
 }
-
-module.exports = StartCommand;

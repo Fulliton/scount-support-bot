@@ -1,11 +1,11 @@
-const { Readable } = require('stream');
-const AbstractAction = require('@bootstrap/AbstractAction');
-const { Message } = require('@decorators/Message');
-const CreateSynthesisActionMiddleware = require('@middleware/CreateSynthesisActionMiddleware');
-
+import { Readable } from 'stream'
+import AbstractAction from "../../helpers/AbstractAction.js"
+import { Message } from '../../decorators/Message.js'
+import CreateSynthesisActionMiddleware from '../middleware/CreateSynthesisActionMiddleware.js'
+import saluteSpeechService from "../../services/SaluteSpeechService.js";
 
 @Message()
-class CreateSynthesisAction extends AbstractAction {
+export default class CreateSynthesisAction extends AbstractAction {
 
     static getMiddleware() {
         return CreateSynthesisActionMiddleware;
@@ -14,7 +14,7 @@ class CreateSynthesisAction extends AbstractAction {
     async handle() {
         const message = await this._send('⏱️ Начинаю обрабатывать, осталось подождать совсем немного...')
         try {
-            const audio = await global.core.saluteSpeech.synthesis(this.message.text);
+            const audio = await saluteSpeechService.synthesis(this.message.text);
             await this._delete(message);
             try {
                 if (audio) {
@@ -40,5 +40,3 @@ class CreateSynthesisAction extends AbstractAction {
         }
     }
 }
-
-module.exports = CreateSynthesisAction;
