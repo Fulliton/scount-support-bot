@@ -8,13 +8,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ef310b3c-31ae-4c23-904f-cb704cde69a1" name="Changes" comment="Перевод на TypeScript">
-      <change afterPath="$PROJECT_DIR$/app/services/SaluteService.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/configs/sberbank.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/actions/Action.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/actions/Action.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/actions/GenerateAudioAction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/actions/GenerateAudioAction.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configs/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/configs/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -165,7 +159,7 @@
       <workItem from="1742914927084" duration="1617000" />
       <workItem from="1742920218580" duration="19547000" />
       <workItem from="1742968465483" duration="1868000" />
-      <workItem from="1742992872069" duration="5717000" />
+      <workItem from="1742992872069" duration="6099000" />
     </task>
     <task id="LOCAL-00001" summary="Добавлена быстра команда для запуска проекта">
       <option name="closed" value="true" />
@@ -287,7 +281,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742997119501</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Перевод на TypeScript">
+      <option name="closed" value="true" />
+      <created>1742998595145</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1742998595145</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
