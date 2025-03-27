@@ -11,7 +11,6 @@ export default class StartAction extends Action{
         await this._send(
             "Напиши мне текст и Я его озвучу",
             this._getChatId(message),
-            message.message_id
         )
     }
 }

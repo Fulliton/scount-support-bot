@@ -1,6 +1,9 @@
 import Command from "@decorators/Command";
 import Action from "@actions/Action";
 import {Message} from "node-telegram-bot-api";
+import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
+import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
+import SendMessageOptions from "@utils/Telegram/SendMessageOptions";
 
 @Command(/\/start/)
 @Command(/\/help/)
@@ -17,7 +20,10 @@ export default class StartAction extends Action{
             "🧠 Ответы на сложные вопросы\n" +
             "Есть идея, проблема или просто любопытство? Задай вопрос — постараюсь удивить ответом.",
             this._getChatId(message),
-            message.message_id
+            SendMessageOptions.init()
+                .addInlineKeyboard(
+                    InlineKeyboardMarkup.addButton(InlineKeyboardButton.create('Вызвать Ассистента', 'gpt'))
+                )
         )
     }
 }

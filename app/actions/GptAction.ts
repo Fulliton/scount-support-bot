@@ -12,7 +12,6 @@ export default class GptAction extends Action{
             await this._send(
                 "Привет. Я твой кальянный консультант. Задай вопрос и Я отвечу",
                 this._getChatId(message),
-                message.message_id
             )
         } else {
             // await this._send(

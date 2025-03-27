@@ -24,13 +24,15 @@ export default abstract class Action implements ActionInterface {
         }
     }
 
-    // this._delete(message)
-
-    protected async _send(text: string, chat_id: number, reply: number|null = null): Promise<TelegramBot.Message> {
+    protected async _send(
+        text: string,
+        chat_id: number,
+        options: TelegramBot.SendMessageOptions|undefined = undefined
+    ): Promise<TelegramBot.Message> {
         return await this._bot.sendMessage(
             chat_id,
             text,
-            reply ? {reply_to_message_id: reply} : {}
+           options
         );
     }
 }

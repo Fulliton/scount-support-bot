@@ -79,6 +79,7 @@ export default class GptAction extends Action{
             const newLastMessage = await this._bot.sendMessage(this._getChatId(message), text, {
                 parse_mode: 'Markdown',
                 reply_markup: {
+
                     inline_keyboard: [
                         [{ text: '🚪 Выйти из ассистента', callback_data: 'exit_gpt' }],
                     ],

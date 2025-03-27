@@ -83,7 +83,7 @@ export default class ActionProvider extends ServiceProvider{
                                     (new ActionClass).handle(query.message)
                                 }
                             } else {
-                                console.debug('Received Message Not Middleware:', query.data);
+                                console.debug('Received Callback Not Middleware:', query.data);
                                 (new ActionClass).handle(query.message)
                             }
 
