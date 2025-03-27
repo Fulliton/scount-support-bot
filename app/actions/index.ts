@@ -1,3 +1,6 @@
 export {default as StartAction} from '@actions/StartAction'
 export {default as SpeakAction} from '@actions/SpeakAction'
 export {default as GenerateAudioAction} from '@actions/GenerateAudioAction'
+export {default as GptAction} from '@actions/GptAction'
+export {default as GptAnswerAction} from '@actions/GptAnswerAction'
+export {default as StopGptAction} from '@actions/StopGptAction'

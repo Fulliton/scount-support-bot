@@ -36,6 +36,7 @@
     "sqlite3": "^5.1.7",
     "tough-cookie": "^4.1.4",
     "tsconfig-paths": "^4.2.0",
+    "typeorm": "^0.3.21",
     "uuid": "^11.1.0"
   },
   "devDependencies": {

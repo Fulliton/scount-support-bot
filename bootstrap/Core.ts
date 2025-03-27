@@ -1,9 +1,13 @@
 "use strict"
 
+import "reflect-metadata";
 import TelegramBot from "node-telegram-bot-api"
 import * as configs from '../configs'
 import * as providers from "@providers/index"
-import ServiceProvider from "@providers/ServiceProvider";
+import ServiceProvider from "@providers/ServiceProvider"
+import { createConnection, DataSource } from "typeorm";
+import {Chat} from "@app/models/Chat";
+import {Assistant} from "@app/models/Assistant";
 
 export class Core {
     /**
@@ -16,6 +20,8 @@ export class Core {
      * @private
      */
     _bot: TelegramBot = null;
+
+    _connection: DataSource|null = null;
 
     constructor() {
         console.debug('Core: Initializing');
@@ -44,6 +50,23 @@ export class Core {
         })
     }
 
+    async connectDatabase() {
+        console.debug('Initializing database');
+        try {
+            this._connection = new DataSource({
+                type: "sqlite",
+                database: 'database.sqlite',
+                entities: [Chat, Assistant],
+                synchronize: true,
+            }); // Establish connection using ormconfig.json
+            await this._connection.initialize()
+            await this._connection.synchronize()
+            console.log("Database connected successfully!");
+        } catch (error) {
+            console.error("Error connecting to the database:", error);
+        }
+    }
+
     get config(): Object
     {
         return this._config
@@ -52,6 +75,11 @@ export class Core {
     get bot(): TelegramBot
     {
         return this._bot
+    }
+
+    get connection(): DataSource
+    {
+        return this._connection
     }
 }
 
