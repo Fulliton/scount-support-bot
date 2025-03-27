@@ -1,8 +1,6 @@
 enum StateEnum {
-    SEND_ALL = 'SEND_ALL',
     SPEAK = 'SPEAK',
-    TOBACCO = 'TOBACCO',
-    GPT = 'GPT'
+    ASSISTANT = 'ASSISTANT'
 }
 
 export default StateEnum

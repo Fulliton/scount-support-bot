@@ -1,8 +1,10 @@
-export class GtpMessageState {
-    private _state: Map<number, number> = new Map()
+import {Message} from "node-telegram-bot-api";
 
-    setState(chat_id: number, message_id: number) {
-        this._state.set(chat_id, message_id);
+export class GtpMessageState {
+    private _state: Map<number, Message> = new Map()
+
+    setState(chat_id: number, message: Message) {
+        this._state.set(chat_id, message);
         console.debug('GptMessageState: setState', this._state);
     }
 
@@ -10,7 +12,7 @@ export class GtpMessageState {
      * Получить состояние чата
      * @param chat_id
      */
-    getState(chat_id: number) {
+    getState(chat_id: number): Message {
         const answer = this._state.get(chat_id);
         console.debug('GptMessageState: getState', this._state);
         return answer;

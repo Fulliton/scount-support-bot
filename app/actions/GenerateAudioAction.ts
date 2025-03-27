@@ -26,6 +26,7 @@ export default class GenerateAudioAction extends Action {
                         stream,
                         {reply_to_message_id: message.message_id},
                         {
+                            filename: 'New_Voice_Bot.ogg',
                             contentType: 'application/ogg',
                         }
                     );

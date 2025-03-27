@@ -4,9 +4,10 @@ import {Message} from "node-telegram-bot-api";
 import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
 import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
 import SendMessageOptions from "@utils/Telegram/SendMessageOptions";
+import CallbackEnum from "@app/enums/CallbackEnum";
 
-@Command(/\/start/)
-@Command(/\/help/)
+@Command(/^\/start$/)
+@Command(/^\/help$/)
 export default class StartAction extends Action{
     async handle(message: Message): Promise<void> {
         await this._send(
@@ -17,12 +18,17 @@ export default class StartAction extends Action{
             "📝 Текст → Голос\n" +
             "Хочешь услышать, как звучит твой текст? Просто пришли его — я озвучу!\n" +
             "Просто отправь мне: /speak и я попрошу его написать\n\n" +
-            "🧠 Ответы на сложные вопросы\n" +
-            "Есть идея, проблема или просто любопытство? Задай вопрос — постараюсь удивить ответом.",
+            "🧠 Помочь с подбором така?\n" +
+            "Я буду твоим личным ассистентом. Всегда помогу подобрать табак или микс. /" + CallbackEnum.START_ASSISTANT,
             this._getChatId(message),
             SendMessageOptions.init()
                 .addInlineKeyboard(
-                    InlineKeyboardMarkup.addButton(InlineKeyboardButton.create('Вызвать Ассистента', 'gpt'))
+                    InlineKeyboardMarkup.addButton(
+                        InlineKeyboardButton.create('Вызвать Ассистента', CallbackEnum.START_ASSISTANT)
+                    )
+                        .addButton(
+                            InlineKeyboardButton.create('Повтори за мной', CallbackEnum.SPEAK)
+                        )
                 )
         )
     }

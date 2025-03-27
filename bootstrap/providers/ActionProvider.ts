@@ -15,6 +15,11 @@ export default class ActionProvider extends ServiceProvider{
             registeredCommands.forEach((command: RegExp) => {
                 this._registerCommand(command, ActionClass);
             });
+
+            if(Reflect.getMetadata("isVoice", ActionClass)) {
+                this._registerVoice(ActionClass)
+            }
+
         }
 
         this._registerMessage()
@@ -54,6 +59,19 @@ export default class ActionProvider extends ServiceProvider{
         this.telegramBot.onText(command, (message: TelegramBot.Message) => {
             try {
                 console.debug('Received Command:', message.text);
+                (new actionClass).handle(message);
+            } catch (err) {
+                console.error('Error while handling handler');
+            }
+
+        });
+    }
+
+    private _registerVoice(actionClass: new () => ActionInterface): void {
+        // Регистрация команды для бота
+        this.telegramBot.on('voice', (message: TelegramBot.Message) => {
+            try {
+                console.debug('Received Voice:');
                 (new actionClass).handle(message);
             } catch (err) {
                 console.error('Error while handling handler');

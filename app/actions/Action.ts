@@ -35,4 +35,14 @@ export default abstract class Action implements ActionInterface {
            options
         );
     }
+
+    protected async clearKeyBoard(message: TelegramBot.Message): Promise<void> {
+        try {
+            if (message?.reply_markup?.inline_keyboard?.length)
+                await this._bot.editMessageReplyMarkup(
+                    {inline_keyboard: []}, // пустая клавиатура
+                    {chat_id: message.chat.id, message_id: message.message_id}
+                );
+        } catch (e) {}
+    }
 }

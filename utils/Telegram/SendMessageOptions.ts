@@ -11,6 +11,11 @@ export default class SendMessageOptions implements TelegramMessageOptions {
         return new SendMessageOptions()
     }
 
+    parseMode(parse_mode: ParseMode) {
+        this.parse_mode = parse_mode
+        return this
+    }
+
     addInlineKeyboard(keyboard: InlineKeyboardMarkup) {
         this.reply_markup = keyboard
         return this
