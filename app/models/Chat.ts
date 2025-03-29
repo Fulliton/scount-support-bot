@@ -5,7 +5,7 @@ export class Chat {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({unique: true})
     chat_id: number
 
     @Column({ nullable: true })
@@ -13,4 +13,10 @@ export class Chat {
 
     @Column({ nullable: true })
     assistant_id: string|null
+
+    @Column({ nullable: true })
+    file_id: string|null
+
+    @Column({ nullable: true })
+    vector_store_id: string|null
 }

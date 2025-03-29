@@ -16,8 +16,7 @@ export default class ChatRepository{
      */
     async firstOrCreate(chat_id: number): Promise<Chat>
     {
-        let chat = await core.connection.getRepository(Chat)
-            .findOne({
+        let chat = await this._repository.findOne({
                 where: {
                     chat_id: chat_id
                 }
@@ -37,6 +36,30 @@ export default class ChatRepository{
     async saveThreadId(chat: Chat, thread_id: string): Promise<Chat>
     {
         chat.thread_id = thread_id;
-       return await this._repository.save(chat);
+        return await this._repository.save(chat);
+    }
+
+    async clearThreadId(chat: Chat): Promise<Chat>
+    {
+        chat.thread_id = null;
+        return await this._repository.save(chat);
+    }
+
+    async saveAssistant(chat: Chat, assistant_at: string): Promise<Chat>
+    {
+        chat.assistant_id = assistant_at;
+        return await this._repository.save(chat);
+    }
+
+    async saveFile(chat: Chat, file_id: string): Promise<Chat>
+    {
+        chat.file_id = file_id;
+        return await this._repository.save(chat);
+    }
+
+    async saveVectorStore(chat: Chat, vector_store_id: string): Promise<Chat>
+    {
+        chat.vector_store_id = vector_store_id
+        return await this._repository.save(chat);
     }
 }

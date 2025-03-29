@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc && tsc-alias",
     "start": "node dist/cli.js",
-    "build:start": "npm run build && npm run start"
+    "build:start": "rm -rf dist && npm run build && npm run start"
   },
   "bin": {
     "cli": "./cli.js"
@@ -20,7 +20,8 @@
     "@app": "app",
     "@decorators": "decorators",
     "@utils": "utils",
-    "@actions": "app/actions"
+    "@actions": "app/actions",
+    "@lang": "lang"
   },
   "dependencies": {
     "@types/node-telegram-bot-api": "^0.64.8",

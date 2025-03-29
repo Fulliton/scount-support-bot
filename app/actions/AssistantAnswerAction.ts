@@ -6,12 +6,15 @@ import Message from "@decorators/Message";
 import ChatRepository from "@app/repositories/ChatRepository";
 import {Thread} from "openai/resources/beta/threads";
 import gptService from "@app/services/openai/GptService";
-import AssistantRepository from "@app/repositories/AssistantRepository";
 import gptMessageState from "@app/states/GptMessageState";
 import SendMessageOptions from "@utils/Telegram/SendMessageOptions";
 import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
 import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
 import CallbackEnum from "@app/enums/CallbackEnum";
+import {Assistant} from "openai/resources/beta/assistants";
+import createTobaccoState from "@app/states/CreateTobaccoState";
+import chatState from "@app/states/ChatState";
+import StateEnum from "@app/enums/StateEnum";
 
 @Middleware(CheckAssistantStateMiddleware)
 @Message()
@@ -30,7 +33,6 @@ export default class GptAction extends Action{
         let dots = 3;
 
         const chatRepository = new ChatRepository();
-        const assistantRepository = new AssistantRepository();
 
         let chat = await chatRepository.firstOrCreate(message.chat.id)
 
@@ -39,12 +41,9 @@ export default class GptAction extends Action{
             chat = await chatRepository.saveThreadId(chat, thread.id)
         }
 
-        let assistant = await assistantRepository.first()
-
-        if (assistant === null) {
-            assistant = await assistantRepository.create(
-                (await gptService.createAssistant()).id
-            )
+        if(chat.assistant_id === null) {
+            const assistant: Assistant = await gptService.createAssistant(chat.chat_id.toString())
+            chat = await chatRepository.saveAssistant(chat, assistant.id)
         }
 
         let interval = setInterval(() => {
@@ -63,7 +62,7 @@ export default class GptAction extends Action{
         }, 1000)
 
 
-        const answer = await gptService.complete(assistant.assistant_id, chat.thread_id, message.text);
+        const answer = await gptService.complete(chat.assistant_id, chat.thread_id, message.text);
 
         clearInterval(interval);
         interval = null
@@ -71,21 +70,38 @@ export default class GptAction extends Action{
 
         await this._delete(this._getChatId(message), loadingMessage)
 
-        if (answer.type === 'text') {
-            const text = answer.text.value;
-            console.log('Ответ:', text);
-            const newLastMessage = await this._send(
-                text,
-                this._getChatId(message),
-                SendMessageOptions.init()
-                    .parseMode('Markdown')
-                    .addInlineKeyboard(
-                        InlineKeyboardMarkup.addButton(InlineKeyboardButton.create('🚪 Выйти из ассистента', CallbackEnum.STOP_ASSISTANT))
-                    )
-            )
-            gptMessageState.setState(this._getChatId(newLastMessage), newLastMessage)
+        if (answer) {
+            console.log('Answer', answer)
+
+            if (answer.total_tokens > 6000) {
+                answer.text += "\n\n🙋 Моя память не бесконечна. Я буду помнить всё что ты курил, но могу забыть твои вопросы ранее. 😽😽😽"
+
+                await chatRepository.clearThreadId(chat)
+            }
+
+            if (answer.text === '/create_hookah') {
+                createTobaccoState.clearState(message.chat.id)
+                chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_1)
+
+                await this._send(
+                    "Я запомню что ты курил. И задам несколько вопросов.\n" +
+                    "1) Название табака:",
+                    message.chat.id,
+                )
+            } else {
+                const newLastMessage = await this._send(
+                    answer.text,
+                    message.chat.id,
+                    SendMessageOptions.init()
+                        .parseMode('Markdown')
+                        .addInlineKeyboard(
+                            InlineKeyboardMarkup.addButton(InlineKeyboardButton.create('🚪 Выйти из ассистента', CallbackEnum.STOP_ASSISTANT))
+                        )
+                )
+                gptMessageState.setState(this._getChatId(newLastMessage), newLastMessage)
+            }
         } else {
-            console.error('Контент не текстовый:', answer)
+            await this._send('Упс, произошла ошибка', message.chat.id)
         }
     }
 }

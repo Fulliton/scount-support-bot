@@ -5,9 +5,8 @@ import TelegramBot from "node-telegram-bot-api"
 import * as configs from '../configs'
 import * as providers from "@providers/index"
 import ServiceProvider from "@providers/ServiceProvider"
-import { createConnection, DataSource } from "typeorm";
-import {Chat} from "@app/models/Chat";
-import {Assistant} from "@app/models/Assistant";
+import { DataSource } from "typeorm";
+import * as Models from "@app/models";
 
 export class Core {
     /**
@@ -56,7 +55,7 @@ export class Core {
             this._connection = new DataSource({
                 type: "sqlite",
                 database: 'database.sqlite',
-                entities: [Chat, Assistant],
+                entities: Models,
                 synchronize: true,
             }); // Establish connection using ormconfig.json
             await this._connection.initialize()
