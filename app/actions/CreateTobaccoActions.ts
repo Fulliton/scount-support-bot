@@ -177,6 +177,7 @@ export class SetConclusionTobacco extends Action{
                 await gptService.setVectorStoreInAssistant(chat.assistant_id, chat.vector_store_id)
             }
 
+            await gptService.deleteAllVectorFiles(chat.vector_store_id)
             await gptService.setFileInVectorStore(pathFile, chat.vector_store_id)
 
             fs.unlinkSync(pathFile)

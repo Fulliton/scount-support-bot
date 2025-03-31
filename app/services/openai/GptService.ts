@@ -70,6 +70,29 @@ export class GptService {
 
     async setFileInVectorStore(path: string, vector_store_id: string): Promise<void> {
         await this._chat.vectorStores.fileBatches.uploadAndPoll(vector_store_id, {files: [fs.createReadStream(path)]})
+        console.log('✅ Добавили файл в Vector Store');
+    }
+
+    async deleteAllVectorFiles(vector_store_id: string): Promise<void> {
+        try {
+            // Получаем список всех файлов, прикреплённых к хранилищу векторов
+            const files = await this._chat.vectorStores.files.list(vector_store_id);
+
+            // Удаляем каждый файл
+            for (const file of files.data) {
+                console.log(`Удаляю файл ${file.id}...`);
+                await this._chat.vectorStores.files.del(vector_store_id, file.id)
+                    .then(() => {
+                        this._chat.files.del(file.id)
+                            .catch(err => console.error('Ошибка удаления файла ', file.id));
+                    })
+                    .catch(() => console.error('Ошибка удаления файла из Vector Storage'))
+            }
+
+            console.log('✅ Все файлы удалены из vector storage.');
+        } catch (error) {
+            console.error('Ошибка при удалении файлов:', error);
+        }
     }
 
     async setVectorStoreInAssistant(assistant_id: string, vector_store_id: string): Promise<void>
@@ -78,6 +101,7 @@ export class GptService {
             tool_resources:{file_search: {vector_store_ids: [vector_store_id]}},
             tools: [{type: "file_search"}]
         })
+        console.log('✅ Привязали Vector Store к Assistant.');
     }
 }
 
