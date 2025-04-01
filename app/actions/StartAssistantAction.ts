@@ -24,6 +24,7 @@ export default class StartAssistantAction extends Action{
             SendMessageOptions.init()
                 .addInlineKeyboard(
                     InlineKeyboardMarkup.addButton(InlineKeyboardButton.create('🚪 Выйти из ассистента', CallbackEnum.STOP_ASSISTANT))
+                        .addButton(InlineKeyboardButton.create('Запомнить покур', CallbackEnum.CREATE_TOBACCO))
                 )
         )
         gptMessageState.setState(this._getChatId(lastMessage), lastMessage)

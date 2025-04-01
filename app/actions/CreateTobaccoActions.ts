@@ -13,26 +13,61 @@ import * as path from "node:path";
 import gptService from "@app/services/openai/GptService";
 import ChatRepository from "@app/repositories/ChatRepository";
 import StartAssistantAction from "@actions/StartAssistantAction";
+import Callback from "@decorators/Callback";
+import CallbackEnum from "@app/enums/CallbackEnum";
+import SendMessageOptions from "@utils/Telegram/SendMessageOptions";
+import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
+import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
 
 @Command(/^\/create_tobacco$/)
+@Callback(CallbackEnum.CREATE_TOBACCO)
 export class StartCreateTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
         createTobaccoState.clearState(message.chat.id)
+        this.clearKeyBoard(message)
 
         await this._send(
             "Я запомню что ты курил. И задам несколько вопросов.\n" +
             "1) Название табака:",
             message.chat.id,
+            SendMessageOptions.init()
+                .addInlineKeyboard(
+                    InlineKeyboardMarkup
+                        .addButton(InlineKeyboardButton.create('🚪 Остановить', CallbackEnum.STOP_TOBACCO))
+                )
         )
         await sleep(500)
         chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_1)
     }
 }
 
+@Command(/^\/stop_tobacco$/)
+@Callback(CallbackEnum.STOP_TOBACCO)
+export class StopCreateTobacco extends Action{
+    async handle(message: TelegramBot.Message): Promise<void> {
+        createTobaccoState.clearState(message.chat.id)
+        chatState.clearState(message.chat.id)
+        this.clearKeyBoard(message)
+
+        await this._send(
+            "Хорошо, если понадоблюсь, только попроси ",
+            message.chat.id,
+            SendMessageOptions.init()
+                .addInlineKeyboard(
+                    InlineKeyboardMarkup
+                        .addButton(InlineKeyboardButton.create('Вызвать Ассистента', CallbackEnum.START_ASSISTANT))
+                        .addButton(InlineKeyboardButton.create('Запомнить покур', CallbackEnum.CREATE_TOBACCO))
+                )
+        )
+    }
+}
+
+
 @Message()
 export class SetNameTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
         if (chatState.getState(message.chat.id) === StateEnum.TOBACCO_STAGE_1) {
+            this.clearKeyBoard(message)
 
             const tobacco = new Tobacco()
             tobacco.name = message.text
@@ -42,6 +77,11 @@ export class SetNameTobacco extends Action{
             await this._send(
                 "2) Оцени крепость от 0 до 10: ",
                 message.chat.id,
+                SendMessageOptions.init()
+                    .addInlineKeyboard(
+                        InlineKeyboardMarkup
+                            .addButton(InlineKeyboardButton.create('🚪 Остановить', CallbackEnum.STOP_TOBACCO))
+                    )
             )
             await sleep(500)
             chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_2)
@@ -54,6 +94,7 @@ export class SetNameTobacco extends Action{
 export class SetTasteTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
         if (chatState.getState(message.chat.id) === StateEnum.TOBACCO_STAGE_2) {
+            this.clearKeyBoard(message)
 
             const tobacco = createTobaccoState.getState(message.chat.id)
             tobacco.taste = Number(message.text)
@@ -62,6 +103,11 @@ export class SetTasteTobacco extends Action{
             await this._send(
                 "3) Время курения: ",
                 message.chat.id,
+                SendMessageOptions.init()
+                    .addInlineKeyboard(
+                        InlineKeyboardMarkup
+                            .addButton(InlineKeyboardButton.create('🚪 Остановить', CallbackEnum.STOP_TOBACCO))
+                    )
             )
             await sleep(500)
             chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_3)
@@ -73,6 +119,7 @@ export class SetTasteTobacco extends Action{
 export class SetSmokingTimeTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
         if (chatState.getState(message.chat.id) === StateEnum.TOBACCO_STAGE_3) {
+            this.clearKeyBoard(message)
 
             const tobacco = createTobaccoState.getState(message.chat.id)
             tobacco.smoking_time = message.text
@@ -81,6 +128,11 @@ export class SetSmokingTimeTobacco extends Action{
             await this._send(
                 "4) Оцени жаростойкость: ",
                 message.chat.id,
+                SendMessageOptions.init()
+                    .addInlineKeyboard(
+                        InlineKeyboardMarkup
+                            .addButton(InlineKeyboardButton.create('🚪 Остановить', CallbackEnum.STOP_TOBACCO))
+                    )
             )
             await sleep(500)
             chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_4)
@@ -92,6 +144,7 @@ export class SetSmokingTimeTobacco extends Action{
 export class SetHeatResistanceTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
         if (chatState.getState(message.chat.id) === StateEnum.TOBACCO_STAGE_4) {
+            this.clearKeyBoard(message)
 
             const tobacco = createTobaccoState.getState(message.chat.id)
             tobacco.heat_resistance = message.text
@@ -100,6 +153,11 @@ export class SetHeatResistanceTobacco extends Action{
             await this._send(
                 "5) На сколько тяжелый он был: ",
                 message.chat.id,
+                SendMessageOptions.init()
+                    .addInlineKeyboard(
+                        InlineKeyboardMarkup
+                            .addButton(InlineKeyboardButton.create('🚪 Остановить', CallbackEnum.STOP_TOBACCO))
+                    )
             )
             await sleep(500)
             chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_5)
@@ -111,6 +169,7 @@ export class SetHeatResistanceTobacco extends Action{
 export class SetHeavinessTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
         if (chatState.getState(message.chat.id) === StateEnum.TOBACCO_STAGE_5) {
+            this.clearKeyBoard(message)
 
             const tobacco = createTobaccoState.getState(message.chat.id)
             tobacco.heaviness = message.text
@@ -119,6 +178,11 @@ export class SetHeavinessTobacco extends Action{
             await this._send(
                 "6) Ожидаю вывод: ",
                 message.chat.id,
+                SendMessageOptions.init()
+                    .addInlineKeyboard(
+                        InlineKeyboardMarkup
+                            .addButton(InlineKeyboardButton.create('🚪 Остановить', CallbackEnum.STOP_TOBACCO))
+                    )
             )
             await sleep(500)
             chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_6)
@@ -131,6 +195,7 @@ export class SetConclusionTobacco extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
 
         if (chatState.getState(message.chat.id) === StateEnum.TOBACCO_STAGE_6) {
+            this.clearKeyBoard(message)
             const tobaccoRepository = new TobaccoRepository()
             const tobacco = createTobaccoState.getState(message.chat.id)
             tobacco.conclusion = message.text
