@@ -12,6 +12,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import gptService from "@app/services/openai/GptService";
 import ChatRepository from "@app/repositories/ChatRepository";
+import StartAssistantAction from "@actions/StartAssistantAction";
 
 @Command(/^\/create_tobacco$/)
 export class StartCreateTobacco extends Action{
@@ -177,10 +178,15 @@ export class SetConclusionTobacco extends Action{
                 await gptService.setVectorStoreInAssistant(chat.assistant_id, chat.vector_store_id)
             }
 
-            await gptService.deleteAllVectorFiles(chat.vector_store_id)
-            await gptService.setFileInVectorStore(pathFile, chat.vector_store_id)
+            (new StartAssistantAction()).handle(message)
+                .catch(() => console.error('Error start assistent'))
 
-            fs.unlinkSync(pathFile)
+
+            gptService.deleteAllVectorFiles(chat.vector_store_id)
+                .catch(() => console.error("Failed to delete files"))
+            gptService.setFileInVectorStore(pathFile, chat.vector_store_id)
+                .catch(() => console.error("Failed to setFile"))
+                .finally(() =>  fs.unlinkSync(pathFile))
         }
     }
 }
