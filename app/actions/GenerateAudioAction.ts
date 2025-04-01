@@ -1,12 +1,13 @@
-import Action from "@actions/Action";
-import {Middleware} from "@decorators/Middleware";
-import CheckSpeakStateMiddleware from "@middlewares/CheckSpeakStateMiddleware";
-import Message from "@decorators/Message";
+import Action from "@bootstrap/actions/Action";
+import Middleware from "@bootstrap/decorators/Middleware";
+import Message from "@bootstrap/decorators/Message";
 import {Readable} from "stream";
 import saluteService from "@app/services/SaluteService";
 import TelegramBot from "node-telegram-bot-api";
+import StateMiddleware from "@middlewares/StateMiddleware";
+import StateEnum from "@app/enums/StateEnum";
 
-@Middleware(CheckSpeakStateMiddleware)
+@Middleware(StateMiddleware, [StateEnum.SPEAK])
 @Message()
 export default class GenerateAudioAction extends Action {
 

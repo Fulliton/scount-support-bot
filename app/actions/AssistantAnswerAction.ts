@@ -1,8 +1,7 @@
-import Action from "@actions/Action";
+import Action from "@bootstrap/actions/Action";
 import TelegramBot from "node-telegram-bot-api";
-import {Middleware} from "@decorators/Middleware";
-import CheckAssistantStateMiddleware from "@middlewares/CheckAssistantStateMiddleware";
-import Message from "@decorators/Message";
+import Middleware from "@bootstrap/decorators/Middleware";
+import Message from "@bootstrap/decorators/Message";
 import ChatRepository from "@app/repositories/ChatRepository";
 import {Thread} from "openai/resources/beta/threads";
 import gptService from "@app/services/openai/GptService";
@@ -12,11 +11,12 @@ import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
 import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
 import CallbackEnum from "@app/enums/CallbackEnum";
 import {Assistant} from "openai/resources/beta/assistants";
-import createTobaccoState from "@app/states/CreateTobaccoState";
 import chatState from "@app/states/ChatState";
 import StateEnum from "@app/enums/StateEnum";
+import StateMiddleware from "@middlewares/StateMiddleware";
+import {StartCreateTobacco} from "@actions/CreateTobaccoActions";
 
-@Middleware(CheckAssistantStateMiddleware)
+@Middleware(StateMiddleware, [StateEnum.ASSISTANT])
 @Message()
 export default class GptAction extends Action{
     async handle(message: TelegramBot.Message): Promise<void> {
@@ -80,14 +80,7 @@ export default class GptAction extends Action{
             }
 
             if (answer.text === '/create_hookah') {
-                createTobaccoState.clearState(message.chat.id)
-                chatState.setState(message.chat.id, StateEnum.TOBACCO_STAGE_1)
-
-                await this._send(
-                    "Я запомню что ты курил. И задам несколько вопросов.\n" +
-                    "1) Название табака:",
-                    message.chat.id,
-                )
+                await (new StartCreateTobacco()).handle(message)
             } else {
                 const newLastMessage = await this._send(
                     answer.text,
@@ -99,6 +92,7 @@ export default class GptAction extends Action{
                         )
                 )
                 gptMessageState.setState(this._getChatId(newLastMessage), newLastMessage)
+                chatState.setState(message.chat.id, StateEnum.ASSISTANT)
             }
         } else {
             await this._send('Упс, произошла ошибка', message.chat.id)

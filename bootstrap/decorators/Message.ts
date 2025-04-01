@@ -1,4 +1,4 @@
-import Action from "@actions/Action";
+import Action from "@bootstrap/actions/Action";
 import "reflect-metadata";
 
 export default function Message() {

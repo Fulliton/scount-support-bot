@@ -1,12 +1,12 @@
-import Action from "@actions/Action";
 import "reflect-metadata";
-import AbstractMiddleware from "@middlewares/AbstractMiddleware";
+import Action from "@bootstrap/actions/Action";
+import {MiddlewareClass} from "@bootstrap/middleware/MiddlewareClass";
 
-export function Middleware(middleware: typeof AbstractMiddleware) {
+export default function Middleware(middleware: MiddlewareClass, args: any[] = []) {
     return function (action: typeof Action) {
         // Добавляем команду в метаданные класса
         const existingMiddleware = Reflect.getMetadata("middlewares", action) || [];
-        existingMiddleware.push(middleware);
+        existingMiddleware.push(Reflect.construct(middleware, args));
         Reflect.defineMetadata("middlewares", existingMiddleware, action);
     };
 }

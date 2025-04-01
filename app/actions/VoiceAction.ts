@@ -1,6 +1,6 @@
-import Action from "@actions/Action";
+import Action from "@bootstrap/actions/Action";
 import {Message} from "node-telegram-bot-api";
-import Voice from "@decorators/Voice";
+import Voice from "@bootstrap/decorators/Voice";
 import saluteService from "@app/services/SaluteService";
 
 @Voice()

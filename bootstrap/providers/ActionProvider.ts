@@ -3,13 +3,13 @@ import * as Actions from "@actions/index"
 import TelegramBot from 'node-telegram-bot-api'
 import MiddlewareInterface from "@interfaces/MiddlewareInterface";
 import ActionInterface from "@interfaces/ActionInterface";
+import AbstractMiddleware from "@bootstrap/middleware/AbstractMiddleware";
 
 
 
 export default class ActionProvider extends ServiceProvider{
 
     boot(): void {
-        console.log('Actions', Actions);
         for (const ActionClass of Object.values(Actions)) {
             const registeredCommands: RegExp[] = Reflect.getMetadata("commands", ActionClass) || [];
             registeredCommands.forEach((command: RegExp) => {
@@ -28,15 +28,21 @@ export default class ActionProvider extends ServiceProvider{
 
     private _registerMessage(): void {
         this.telegramBot.on('message', async (message: TelegramBot.Message) => {
+
+            if (message?.entities?.[0]?.type === "bot_command" || message.text === undefined) {
+                return
+            }
+
+
             try {
                 for (const ActionClass of Object.values(Actions)) {
                     const isMessage: boolean = Reflect.getMetadata("isMessage", ActionClass);
 
                     if (isMessage === true) {
-                        const middlewares: Array<new () => MiddlewareInterface> = Reflect.getMetadata("middlewares", ActionClass) || [];
+                        const middlewares: Array<AbstractMiddleware> = Reflect.getMetadata("middlewares", ActionClass) || [];
                         if (middlewares.length) {
                             const results = await Promise.all(
-                                middlewares.map((middleware) => (new middleware()).handle(this.telegramBot, message))
+                                middlewares.map((middleware) => middleware.handle(this.telegramBot, message))
                             );
                             if (results.every((result) => result === true)) {
                                 console.debug('Received Message:', message.text);

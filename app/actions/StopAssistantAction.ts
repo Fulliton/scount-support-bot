@@ -1,15 +1,15 @@
-import Action from "@actions/Action";
+import Action from "@bootstrap/actions/Action";
 import {Message} from "node-telegram-bot-api";
 import chatState from "@app/states/ChatState";
-import Callback from "@decorators/Callback";
+import Callback from "@bootstrap/decorators/Callback";
 import CallbackEnum from "@app/enums/CallbackEnum";
-import Command from "@decorators/Command";
+import Command from "@bootstrap/decorators/Command";
 import SendMessageOptions from "@utils/Telegram/SendMessageOptions";
 import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
 import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
 
 @Callback(CallbackEnum.STOP_ASSISTANT)
-@Command(/^\/stop_assistant$/)
+@Command(/^\/stop_assistant/)
 export default class StopAssistantAction extends Action{
     async handle(message: Message): Promise<void> {
         chatState.clearState(this._getChatId(message))

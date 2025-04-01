@@ -50,7 +50,7 @@ export class GptService {
                 console.log('Ожидаем выполнения')
             }
 
-            await sleep(1000)
+            await sleep(2000)
         } while (responseRetrieve?.status !== 'completed');
 
         const response = await this._chat.beta.threads.messages.list(thread_id)

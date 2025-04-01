@@ -1,5 +1,5 @@
-import Command from "@decorators/Command";
-import Action from "@actions/Action";
+import Command from "@bootstrap/decorators/Command";
+import Action from "@bootstrap/actions/Action";
 import {Message} from "node-telegram-bot-api";
 import InlineKeyboardMarkup from "@utils/Telegram/InlineKeyboardMarkup";
 import InlineKeyboardButton from "@utils/Telegram/InlineKeyboardButton";
