@@ -1,4 +1,7 @@
-.idea
+vanila/.idea
 node_modules
 .env
+vanila
+dist
+.idea
 database.sqlite

@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".", // корень проекта
+    "rootDir": ".",
+    "paths": {
+      "@app/*": ["app/*"],
+      "@providers/*": ["bootstrap/providers/*"],
+      "@bootstrap/*": ["bootstrap/*"],
+      "@decorators/*": ["decorators/*"],
+      "@utils/*": ["utils/*"],
+      "@actions/*": ["app/actions/*"],
+      "@middlewares/*": ["app/middlewares/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@lang/*": ["lang/*"]
+    },
+    "module": "commonjs",
+    "target": "es2022",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "outDir": "./dist"
+  },
+  "include": ["/**/*.ts", "/**/*.json"],
+  "exclude": ["node_modules"]
+}
